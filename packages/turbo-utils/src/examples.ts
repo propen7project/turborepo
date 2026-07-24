@@ -548,7 +548,9 @@ export async function downloadAndExtractExample(root: string, name: string) {
   assertSafeGitArgument(tempDir, "temporary directory");
 
   try {
-    // Clone with partial clone (no blobs) and no checkout
+    // Clone with partial clone (no blobs) and no checkout.
+    // Use `--` to terminate option parsing so destination paths cannot be
+    // interpreted as git options (for example, `--upload-pack=...`).
     runGit([
       "clone",
       "--filter=blob:none",
@@ -556,6 +558,7 @@ export async function downloadAndExtractExample(root: string, name: string) {
       "--depth",
       "1",
       "--sparse",
+      "--",
       "https://github.com/vercel/turborepo.git",
       tempDir
     ]);
